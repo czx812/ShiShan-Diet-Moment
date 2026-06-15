@@ -1,0 +1,10 @@
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+    axios.get("http://localhost:8080/list")
+      .then(res => {
+        alert("连接成功！数据：" + JSON.stringify(res.data))
+      })
+      .catch(err => {
+        alert("连接失败")
+      })
+</script>

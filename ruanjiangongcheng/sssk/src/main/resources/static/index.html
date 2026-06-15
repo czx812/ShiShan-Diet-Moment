@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>狮山食刻 · 智慧食堂营养助手</title>
+    <link rel="icon" href="data:,">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            background: #f5f7fb;
+            color: #1e293b;
+            padding: 20px;
+        }
+
+        .app-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .auth-card {
+            max-width: 460px;
+            margin: 80px auto;
+            background: white;
+            border-radius: 32px;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.1);
+            padding: 32px 28px;
+            transition: all 0.2s;
+        }
+
+        .auth-title {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #2b7a3e, #1e5a2f);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .input-group {
+            margin-bottom: 18px;
+        }
+
+        .input-group label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 6px;
+            color: #334155;
+        }
+
+        .input-group input, .input-group select, .input-group textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 20px;
+            font-size: 15px;
+            transition: 0.2s;
+            background: #fff;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #2b7a3e;
+            box-shadow: 0 0 0 3px rgba(43, 122, 62, 0.2);
+        }
+
+        .btn {
+            background: #2b7a3e;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.2s;
+            width: 100%;
+            text-align: center;
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #1e293b;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #2b7a3e;
+            color: #2b7a3e;
+        }
+
+        .btn:hover {
+            background: #1e5a2f;
+            transform: translateY(-1px);
+        }
+
+        .switch-link {
+            text-align: center;
+            margin-top: 20px;
+            color: #2b7a3e;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .navbar {
+            background: white;
+            border-radius: 60px;
+            padding: 12px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-weight: 800;
+            font-size: 24px;
+            background: linear-gradient(135deg, #2b7a3e, #f3b33d);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .user-info {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .tab-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 28px;
+            background: white;
+            padding: 12px 24px;
+            border-radius: 60px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+
+        .tab {
+            padding: 8px 20px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: 0.2s;
+            background: #f1f5f9;
+            color: #334155;
+        }
+
+        .tab.active {
+            background: #2b7a3e;
+            color: white;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 28px;
+            padding: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            transition: 0.2s;
+            position: relative;
+        }
+
+        .dish-tag {
+            background: #eef2ff;
+            border-radius: 30px;
+            padding: 4px 12px;
+            font-size: 12px;
+            display: inline-block;
+            margin-right: 6px;
+            margin-top: 8px;
+        }
+
+        .post-item {
+            border-bottom: 1px solid #e2e8f0;
+            padding: 16px 0;
+        }
+
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .mt-3 {
+            margin-top: 16px;
+        }
+
+        .profile-row {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .stats-badge {
+            background: #fef9e3;
+            border-radius: 32px;
+            padding: 6px 14px;
+            font-size: 13px;
+        }
+
+        button.small {
+            width: auto;
+            padding: 6px 16px;
+            font-size: 13px;
+        }
+
+        .del-btn{
+            position: absolute;
+            top:12px;
+            right:12px;
+            background:#dc3545;
+            color:#fff;
+            border:none;
+            border-radius:6px;
+            padding:4px 10px;
+            cursor:pointer;
+            font-size:12px;
+        }
+
+        .message-toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1e293b;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 60px;
+            z-index: 1000;
+            opacity: 0;
+            transition: 0.2s;
+            pointer-events: none;
+        }
+
+        .search-box{margin-bottom:20px;display:flex;gap:10px;}
+        .search-box input{flex:1;padding:10px;border-radius:20px;border:1px solid #ddd;}
+
+        .cate-wrap {
+            margin:15px 0;
+        }
+        .cate-list {
+            display:flex;
+            flex-wrap:wrap;
+            gap:10px;
+            margin-top:10px;
+            display: none;
+        }
+
+        .modal {
+            position:fixed;
+            top:50%;
+            left:50%;
+            transform:translate(-50%,-50%);
+            background:white;
+            padding:24px;
+            border-radius:16px;
+            box-shadow:0 0 20px rgba(0,0,0,0.2);
+            display:none;
+            z-index:1000;
+            width:90%;
+            max-width:450px;
+        }
+
+        .announce-bar{
+            background:#fef9e3;
+            padding:12px 20px;
+            border-radius:8px;
+            margin-bottom:20px;
+            display:none;
+        }
+
+        @media (max-width: 720px) {
+            .navbar { flex-direction: column; gap: 12px; align-items: stretch; text-align: center; }
+            .tab-bar { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+<div class="app-container" id="app">
+</div>
+<div id="toast" class="message-toast">提示</div>
+
+<div id="commentModal" class="modal">
+    <h3 style="margin-bottom:15px">菜品评价</h3>
+    <div class="input-group">
+        <label>评分(1-5分)</label>
+        <input type="number" id="commentScore" min="1" max="5" value="5">
+    </div>
+    <div class="input-group">
+        <label>评价内容</label>
+        <textarea id="commentContent" rows="3" placeholder="分享用餐体验"></textarea>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:20px">
+        <button class="btn" onclick="submitComment()">提交评价</button>
+        <button class="btn btn-secondary" onclick="closeCommentModal()">取消</button>
+    </div>
+</div>
+
+<div id="postModal" class="modal">
+    <h3 style="margin-bottom:15px">发布社区帖子</h3>
+    <div class="input-group">
+        <label>帖子标题</label>
+        <input type="text" id="postTitle" placeholder="输入标题">
+    </div>
+    <div class="input-group">
+        <label>帖子内容</label>
+        <textarea id="postContent" rows="5" placeholder="分享饮食心得"></textarea>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:20px">
+        <button class="btn" onclick="submitPost()">发布帖子</button>
+        <button class="btn btn-secondary" onclick="closePostModal()">取消</button>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<script>
+    const API_BASE = 'http://localhost:8080';
+    let currentUser = null;
+    let activeTab = 'dishes';
+    let currentCommentDishId = null;
+    let currentCateId = "";
+
+    async function request(url, options = {}) {
+        const fullUrl = API_BASE + url;
+        try {
+            const res = await fetch(fullUrl, {
+                ...options,
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...(options.headers || {})
+                }
+            });
+            const data = await res.json();
+            if (data.code !== undefined && data.code !== 200) {
+                throw new Error(data.msg || '请求失败');
+            }
+            return data.data !== undefined ? data.data : data;
+        } catch (err) {
+            showToast(err.message);
+            throw err;
+        }
+    }
+
+    function showToast(msg, duration = 2500) {
+        const toast = document.getElementById('toast');
+        toast.textContent = msg;
+        toast.style.opacity = '1';
+        setTimeout(() => { toast.style.opacity = '0'; }, duration);
+    }
+
+    function render() {
+        const app = document.getElementById('app');
+        if (!currentUser) {
+            renderAuthScreen();
+        } else {
+            renderMainScreen();
+        }
+    }
+
+    function renderAuthScreen() {
+        let mode = 'login';
+        const container = document.getElementById('app');
+        const authHtml = `
+            <div class="auth-card" id="authCard">
+                <div class="auth-title">🍚 狮山食刻</div>
+                <div id="authForm">
+                    <div class="input-group"><label>用户名</label><input type="text" id="username" placeholder="请输入用户名"></div>
+                    <div class="input-group"><label>密码</label><input type="password" id="password" placeholder="密码"></div>
+                    <div id="extraReg" style="display:none;">
+                        <div class="input-group"><label>手机号</label><input type="tel" id="phone" placeholder="手机号"></div>
+                        <div class="input-group"><label>学号</label><input type="text" id="studentId" placeholder="学号"></div>
+                    </div>
+                    <button class="btn" id="submitBtn">登录</button>
+                    <div class="switch-link" id="switchMode">没有账号？立即注册</div>
+                </div>
+            </div>
+        `;
+        container.innerHTML = authHtml;
+
+        const switchBtn = document.getElementById('switchMode');
+        const submitBtn = document.getElementById('submitBtn');
+        const extraDiv = document.getElementById('extraReg');
+
+        function updateMode() {
+            if (mode === 'login') {
+                extraDiv.style.display = 'none';
+                submitBtn.innerText = '登录';
+                switchBtn.innerText = '没有账号？立即注册';
+            } else {
+                extraDiv.style.display = 'block';
+                submitBtn.innerText = '注册';
+                switchBtn.innerText = '已有账号？去登录';
+            }
+        }
+
+        switchBtn.onclick = () => {
+            mode = mode === 'login' ? 'register' : 'login';
+            updateMode();
+        };
+
+        submitBtn.onclick = async () => {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            if (!username || !password) return showToast('请输入用户名/密码');
+
+            if (mode === 'login') {
+                try {
+                    const url = `${API_BASE}/user/login?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`;
+                    const res = await fetch(url, { method: 'POST' });
+                    const data = await res.json();
+                    if (data.code !== 200) {
+                        throw new Error(data.msg || '密码错误');
+                    }
+                    const userData = data.data || data;
+                    currentUser = {
+                        userId: userData.userId,
+                        username: userData.username,
+                        role: userData.role || 'user'
+                    };
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    showToast('登录成功');
+                    render();
+                } catch (e) {
+                    showToast('账号密码错误');
+                    console.error("登录失败", e);
+                }
+            } else {
+                const phone = document.getElementById('phone').value;
+                const studentId = document.getElementById('studentId').value;
+                try {
+                    await request('/user/register', {
+                        method: 'POST',
+                        body: JSON.stringify({ username, password, phone, studentId, role: 'user' })
+                    });
+                    showToast('注册成功，请登录');
+                    mode = 'login';
+                    updateMode();
+                    document.getElementById('password').value = '';
+                } catch (err) {
+                    showToast('注册失败，用户名已存在');
+                }
+            }
+        };
+        updateMode();
+    }
+
+    async function renderMainScreen() {
+        const container = document.getElementById('app');
+        container.innerHTML = `
+            <div class="navbar">
+                <div class="logo">🍜 狮山食刻 · 健康每一餐</div>
+                <div class="user-info">
+                    <span>👋 ${currentUser.username}</span>
+                    <button class="btn-outline small" id="logoutBtn" style="width:auto; padding:6px 16px;">退出</button>
+                </div>
+            </div>
+            <div class="announce-bar" id="announceBar">
+                <span id="announceText"></span>
+                <button style="border:none;background:none;cursor:pointer;margin-left:10px" onclick="closeAnnounceBar()">×</button>
+            </div>
+            <div class="tab-bar" id="tabBar"></div>
+            <div id="contentPanel" style="min-height: 400px;">加载中...</div>
+        `;
+
+        const tabs = [
+            { id: 'dishes', label: '🍽️ 菜品推荐' },
+            { id: 'diet', label: '📋 饮食计划' },
+            { id: 'checkin', label: '✅ 今日打卡' },
+            { id: 'community', label: '📝 社区动态' },
+            { id: 'health', label: '📊 健康数据' },
+            { id: 'profile', label: '👤 我的档案' }
+        ];
+        const tabBar = document.getElementById('tabBar');
+        tabBar.innerHTML = tabs.map(tab => `<div class="tab ${activeTab === tab.id ? 'active' : ''}" data-tab="${tab.id}">${tab.label}</div>`).join('');
+        document.querySelectorAll('.tab').forEach(el => {
+            el.addEventListener('click', () => {
+                activeTab = el.dataset.tab;
+                renderMainScreen();
+            });
+        });
+
+        loadAnnouncements();
+        await loadTabContent(activeTab);
+        document.getElementById('logoutBtn').onclick = () => {
+            currentUser = null;
+            localStorage.removeItem('currentUser');
+            render();
+        };
+    }
+
+    async function loadTabContent(tabId) {
+        const panel = document.getElementById('contentPanel');
+        panel.innerHTML = '<div style="text-align:center; padding:40px;">加载中...</div>';
+        try {
+            switch(tabId){
+                case 'dishes': await renderDishes(panel);break;
+                case 'diet': await renderDiet(panel);break;
+                case 'checkin': await renderCheckin(panel);break;
+                case 'community': await renderCommunity(panel);break;
+                case 'health': await renderHealthData(panel);break;
+                case 'profile': await renderProfile(panel);break;
+            }
+        } catch (err) {
+            panel.innerHTML = `<div style="color:red; padding:20px;">加载失败: ${err.message}</div>`;
+        }
+    }
+
+    async function renderDishes(container) {
+        let cateListData = [{ id: "", name: "全部" }];
+        try {
+            let res = await request("/dish/category/list");
+            if (Array.isArray(res)) {
+                cateListData = cateListData.concat(res);
+            }
+        } catch (e) {
+            console.log("使用默认分类，页面不会空白");
+        }
+
+        let currentCateId = "";
+        let currentCanteenId = "";
+        let canteenList = [];
+
+        async function loadCanteens() {
+            try {
+                let res = await request("/canteen/list");
+                canteenList = Array.isArray(res) ? res :
+                             (res && Array.isArray(res.data)) ? res.data : [];
+            } catch (e) {
+                canteenList = [];
+            }
+        }
+
+        await loadCanteens();
+
+        const htmlSearch = `
+            <div class="cate-wrap">
+                <button class="btn small" id="toggleCateBtn">展开分类筛选</button>
+                <div class="cate-list" id="cateList" style="gap:8px;flex-wrap:wrap; margin-top:8px;">
+                    ${cateListData.map(item => `
+                        <button class="btn small ${currentCateId === item.id ? 'btn' : 'btn-outline'}" data-cate="${item.id}">${item.name}</button>
+                    `).join('')}
+                </div>
+            </div>
+
+            <div class="cate-wrap mt-3">
+                <label style="margin-right:10px;font-weight:bold;">📍 所属窗口：</label>
+                <div id="canteenBar" style="display:flex;gap:8px;flex-wrap:wrap; margin-top:8px;">
+                    <button class="btn small ${currentCanteenId === '' ? 'btn' : 'btn-outline'}" data-canteen="">全部窗口</button>
+                    ${canteenList.map(c => `
+                        <button class="btn small ${currentCanteenId == c.canteenId ? 'btn' : 'btn-outline'}" data-canteen="${c.canteenId}">
+                            ${c.canteenName}
+                        </button>
+                    `).join('')}
+                </div>
+            </div>
+
+            <div class="search-box mt-3">
+                <input type="text" id="dishKey" placeholder="搜索菜品名称">
+                <button class="btn small" id="searchDish">搜索</button>
+                <button class="btn small btn-outline" id="randDish">随机推荐</button>
+            </div>
+
+            <div id="dishListBox" class="mt-4"></div>
+        `;
+        container.innerHTML = htmlSearch;
+
+        const loadDish = async () => {
+            const key = document.getElementById('dishKey').value.trim();
+            let list = await request(`/dish/list?keyword=${key}&cate_id=${currentCateId}&canteen_id=${currentCanteenId}`);
+            list = list || [];
+
+            if (!list.length) {
+                document.getElementById('dishListBox').innerHTML = `<div class="card">暂无菜品数据</div>`;
+                return;
+            }
+
+            let dishHtml = `<div class="card-grid">`;
+            list.forEach(d => {
+                const location = d.location || '暂无位置';
+                dishHtml += `
+                <div class="card">
+                    <h3>🍲 ${d.dishName}</h3>
+                    <p>📍 所属窗口：${d.canteenName || '暂无'}</p>
+                    <p>🏢 位置：${location}</p>
+                    <p>热量：${d.calories || 0} kcal</p>
+                    <p>蛋白质：${d.protein || 0}g</p>
+                    <p>脂肪：${d.fat || 0}g</p>
+                    <p>碳水：${d.carbs || 0}g</p>
+                    <span class="dish-tag">适配：${d.fitTarget || '通用'}</span>
+                    <div style="display:flex;gap:8px;margin-top:12px;">
+                        <button class="btn small" onclick="openCommentModal(${d.dishId})">我要评价</button>
+                        <button class="btn small btn-outline" id="toggleBtn-${d.dishId}" onclick="toggleCommentList(${d.dishId})">查看评价</button>
+                    </div>
+                    <!-- 评价列表容器，默认隐藏 -->
+                    <div id="commentList-${d.dishId}" style="margin-top:12px;display:none;border-top:1px solid #eee;padding-top:10px;">
+                        <div id="commentContent-${d.dishId}"></div>
+                    </div>
+                </div>`;
+            });
+            dishHtml += `</div>`;
+            document.getElementById('dishListBox').innerHTML = dishHtml;
+        };
+
+        // 分类按钮点击
+        document.querySelectorAll("#cateList button").forEach(btn => {
+            btn.onclick = () => {
+                currentCateId = btn.dataset.cate;
+                document.querySelectorAll("#cateList button").forEach(b => {
+                    b.className = b.dataset.cate == currentCateId ? "btn small" : "btn small btn-outline";
+                });
+                loadDish();
+            };
+        });
+
+        // 窗口点击
+        document.querySelectorAll("#canteenBar button").forEach(btn => {
+            btn.onclick = () => {
+                currentCanteenId = btn.dataset.canteen;
+                document.querySelectorAll("#canteenBar button").forEach(b => {
+                    b.className = b.dataset.canteen == currentCanteenId ? "btn small" : "btn small btn-outline";
+                });
+                loadDish();
+            };
+        });
+
+        document.getElementById('searchDish').onclick = loadDish;
+        document.getElementById('randDish').onclick = async () => {
+            try {
+                const d = await request('/dish/random');
+                if (d) {
+                    document.getElementById('dishKey').value = d.dishName || '';
+                    await loadDish();
+                }
+            } catch (e) {
+                showToast('随机推荐失败');
+            }
+        };
+
+        document.getElementById('toggleCateBtn').onclick = () => {
+            const dom = document.getElementById('cateList');
+            dom.style.display = dom.style.display === 'none' ? 'flex' : 'none';
+        };
+
+        loadDish();
+    }
+
+
+    function toggleCommentList(dishId){
+        const commentListDom = document.getElementById(`commentList-${dishId}`);
+        const btnDom = document.getElementById(`toggleBtn-${dishId}`);
+        if(!commentListDom || !btnDom) return;
+        if(commentListDom.style.display === 'none'){
+            commentListDom.style.display = 'block';
+            btnDom.innerText = '收起评价';
+            loadDishComment(dishId);
+        }else{
+            commentListDom.style.display = 'none';
+            btnDom.innerText = '查看评价';
+        }
+    }
+
+    async function renderDiet(container) {
+        const plans = await request(`/plan/list/${currentUser.userId}`);
+        const arr = plans || [];
+        if (!arr.length) {
+            container.innerHTML = `
+        <div class="card">
+            <h3>🍽️ 暂无今日饮食计划</h3>
+            <p class="mt-3">系统将根据你的健康目标自动搭配餐食</p>
+            <button class="btn mt-3" id="refreshPlanBtn">一键生成今日计划</button>
+        </div>
+    `;
+            document.getElementById('refreshPlanBtn').onclick = async () => {
+                await request(`/plan/refresh/${currentUser.userId}`, { method: 'POST' });
+                showToast('计划生成成功！');
+                renderDiet(container);
+            };
+            return;
+        }
+        container.innerHTML = `
+    <div class="flex-between" style="margin-bottom:20px;">
+        <h3>🍽️ 今日个性化饮食计划</h3>
+        <button class="btn small" id="refreshPlanBtn">重新生成</button>
+    </div>
+    <div class="card-grid">
+        ${arr.map(p => `
+            <div class="card">
+                <button class="del-btn" onclick="delDietPlan(${p.planId})">删除</button>
+                <div style="font-size:18px;font-weight:bold;margin-bottom:8px;">${p.planName}</div>
+                <div>🍱 推荐餐品：${p.recipeContent}</div>
+                <div class="mt-3">总热量：${p.totalCalories} kcal</div>
+                <div class="mt-3 stats-badge">创建时间：${p.createTime ? p.createTime.slice(0,10) : ''}</div>
+            </div>
+        `).join('')}
+    </div>
+`;
+        document.getElementById('refreshPlanBtn').onclick = async () => {
+            await request(`/plan/refresh/${currentUser.userId}`, { method: 'POST' });
+            showToast('计划已重新生成');
+            renderDiet(container);
+        };
+    }
+
+    async function delDietPlan(planId){
+        if(!confirm("确定删除该条饮食计划？")) return;
+        try{
+            await request(`/plan/delete/${planId}`,{method:"DELETE"});
+            showToast("删除成功");
+            renderDiet(document.getElementById("contentPanel"));
+        }catch(e){
+            showToast("删除失败");
+        }
+    }
+
+    async function renderCheckin(container) {
+        let recordList = [];
+        try {
+            recordList = await request(`/clock/list/${currentUser.userId}`);
+        } catch (e) {}
+        container.innerHTML = `
+            <div class="card">
+                <h3>✅ 每日饮食打卡</h3>
+                <p class="mt-3">完成每日打卡，记录你的饮食生活</p>
+                <div id="checkinResult" class="mt-3"></div>
+                <button class="btn mt-3" id="doCheckinBtn">提交今日打卡</button>
+                <div class="mt-3">
+                    <h4>历史打卡记录</h4>
+                    ${recordList.length ? recordList.map(item=>`<div class="stats-badge mt-2">${item.clockTime?item.clockTime.slice(0,10):''} 打卡完成</div>`).join('') : '<div class="mt-2">暂无打卡记录</div>'}
+                </div>
+            </div>
+        `;
+        document.getElementById('doCheckinBtn').onclick = async () => {
+            try {
+                const res = await fetch(`${API_BASE}/clock/add`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        userId: currentUser.userId,
+                        dishList:"日常餐食",
+                        intakeAmount:"正常摄入",
+                        remarks:"日常打卡"
+                    })
+                });
+                const data = await res.json();
+                if (data.code === 200) {
+                    document.getElementById('checkinResult').innerHTML = `<div class="stats-badge">✅ 打卡成功！</div>`;
+                    showToast('打卡成功');
+                    renderCheckin(container);
+                } else {
+                    throw new Error(data.msg);
+                }
+            } catch (err) {
+                document.getElementById('checkinResult').innerHTML = `<div class="stats-badge" style="background:#fee;">❌ ${err.message}</div>`;
+            }
+        };
+    }
+
+    async function renderCommunity(container){
+        container.innerHTML = `
+            <div class="flex-between" style="margin-bottom:20px">
+                <h3>📝 社区动态</h3>
+                <button class="btn small" onclick="openPostModal()">发布新帖子</button>
+            </div>
+            <div id="postListBox"></div>
+        `;
+        const posts = await request('/post/list');
+        const postBox = document.getElementById('postListBox');
+        if(!posts || posts.length === 0){
+            postBox.innerHTML = '<div class="card">暂无社区帖子，快来发布第一条吧</div>';
+            return;
+        }
+        let postHtml = '';
+        posts.forEach(item=>{
+            postHtml += `
+                <div class="card post-item">
+                    <h4>${item.title}</h4>
+                    <p style="margin:10px 0">${item.content}</p>
+                    <div class="flex-between">
+                        <small>发布时间：${item.createTime ? item.createTime.slice(0,16) : ''}</small>
+                        <button class="btn small" onclick="likePost(${item.postId})">❤️ ${item.likeCount || 0}</button>
+                    </div>
+                </div>
+            `;
+        });
+        postBox.innerHTML = postHtml;
+    }
+
+    async function renderHealthData(container){
+        container.innerHTML = `
+            <h3>📊 个人健康数据统计</h3>
+            <div class="card-grid mt-3">
+                <div class="card">
+                    <h4>累计打卡次数</h4>
+                    <p style="font-size:26px;color:#2b7a3e;margin:10px 0" id="clockTotal">0</p>
+                    <span>次</span>
+                </div>
+                <div class="card">
+                    <h4>营养记录条数</h4>
+                    <p style="font-size:26px;color:#2b7a3e;margin:10px 0" id="nutriTotal">0</p>
+                    <span>条</span>
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <h3>📉 体重变化趋势</h3>
+                <div id="weightChart" style="width:100%;height:360px;margin-top:15px;"></div>
+            </div>
+
+            <div class="card mt-3">
+                <h3>✏️ 记录今日体重</h3>
+                <div class="input-group mt-2">
+                    <label>体重 (kg)</label>
+                    <input type="number" id="weightInput" step="0.1" placeholder="例如：62.5">
+                </div>
+                <button class="btn mt-3" id="saveWeight">保存记录</button>
+            </div>
+        `;
+
+        const stats = await request(`/health/stats/${currentUser.userId}`);
+        document.getElementById('clockTotal').innerText = stats.clockTotal || 0;
+        document.getElementById('nutriTotal').innerText = stats.nutriRecord || 0;
+
+        const res = await request(`/weight/history?userId=${currentUser.userId}`);
+        const list = res || [];
+        const dates = [];
+        const weights = [];
+        list.forEach(item => {
+            dates.push(item.recordDate?.split(' ')[0] || '无日期');
+            weights.push(item.weight);
+        });
+
+        const chart = echarts.init(document.getElementById('weightChart'));
+        chart.setOption({
+            tooltip: { trigger: 'axis', formatter: '{b}<br/>体重：{c} kg' },
+            xAxis: { type: 'category', data: dates },
+            yAxis: { type: 'value', name: '体重 (kg)' },
+            series: [{
+                name: '体重',
+                type: 'line',
+                smooth: true,
+                data: weights,
+                color: '#409eff',
+                lineStyle: { width: 3 },
+                areaStyle: { color: 'rgba(64, 158, 255, 0.15)' }
+            }]
+        });
+
+        document.getElementById('saveWeight').onclick = async () => {
+            const weight = document.getElementById('weightInput').value.trim();
+            if (!weight) { showToast('请输入体重'); return; }
+
+            try {
+                await request('/weight/save', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        userId: currentUser.userId,
+                        weight: parseFloat(weight)
+                    })
+                });
+                showToast('保存成功 ✅');
+                renderHealthData(container);
+            } catch (err) {
+                showToast('保存失败');
+                console.error(err);
+            }
+        };
+    }
+
+    async function renderProfile(container) {
+        let portrait;
+        try {
+            portrait = await request(`/userProfile/${currentUser.userId}`);
+            if (!portrait) portrait = {};
+        } catch(e) { portrait = {}; }
+
+        const age = portrait.age || '';
+        const height = portrait.height || '';
+        const weight = portrait.weight || '';
+        const target = portrait.target || '均衡';
+        const activityLevel = portrait.activityLevel || '';
+        const tabooFoods = portrait.tabooFoods || '';
+
+        const html = `
+            <div class="card">
+                <h3>📋 个人健康档案 & 目标设置</h3>
+                <div class="profile-row">
+                    <div class="input-group"><label>年龄</label><input type="number" id="age" value="${age}"></div>
+                    <div class="input-group"><label>身高</label><input id="height" value="${height}"></div>
+                    <div class="input-group"><label>体重</label><input id="weight" value="${weight}"></div>
+                    <div class="input-group">
+                        <label>健康目标</label>
+                        <select id="target">
+                            <option value="均衡" ${target==='均衡'?'selected':''}>均衡饮食</option>
+                            <option value="减脂" ${target==='减脂'?'selected':''}>减脂塑形</option>
+                            <option value="增肌" ${target==='增肌'?'selected':''}>增肌增重</option>
+                        </select>
+                    </div>
+                    <div class="input-group"><label>日常活动量</label><input id="activityLevel" value="${activityLevel}"></div>
+                    <div class="input-group"><label>忌口食材(逗号分隔)</label><textarea id="tabooFoods" rows="2">${tabooFoods}</textarea></div>
+                </div>
+                <button class="btn mt-3" id="saveProfileBtn">💾 保存个人信息与目标</button>
+            </div>
+
+            <div class="card mt-3">
+                <h3>🔐 修改密码</h3>
+                <div class="input-group">
+                    <label>当前密码</label>
+                    <input type="password" id="oldPwd" placeholder="请输入当前密码">
+                </div>
+                <div class="input-group">
+                    <label>新密码</label>
+                    <input type="password" id="newPwd" placeholder="请输入新密码">
+                </div>
+                <div class="input-group">
+                    <label>确认新密码</label>
+                    <input type="password" id="confirmPwd" placeholder="再次输入新密码">
+                </div>
+                <button class="btn mt-3" id="updatePwdBtn">✏️ 修改密码</button>
+            </div>
+
+            <div class="card mt-3" style="border:1px solid #ff5252;">
+                <h3 style="color:#ff5252;">⚠️ 注销账号</h3>
+                <p style="margin:10px 0; font-size:14px;">注销后所有数据将被清除，无法恢复！</p>
+                <button class="btn mt-3" id="deleteUserBtn" style="background:#ff5252;">🗑️ 确认注销账号</button>
+            </div>
+        `;
+        container.innerHTML = html;
+
+        document.getElementById('saveProfileBtn').onclick = async () => {
+            const updated = {
+                profileId: portrait.profileId || null,
+                userId: currentUser.userId,
+                age: document.getElementById('age').value,
+                height: document.getElementById('height').value,
+                weight: document.getElementById('weight').value,
+                target: document.getElementById('target').value,
+                activityLevel: document.getElementById('activityLevel').value,
+                tabooFoods: document.getElementById('tabooFoods').value
+            };
+            try {
+                await request('/userProfile/save', {
+                    method: 'POST',
+                    body: JSON.stringify(updated)
+                });
+                showToast('保存成功');
+            } catch(e) {
+                showToast('保存失败');
+            }
+        };
+
+        document.getElementById('updatePwdBtn').onclick = async () => {
+            const oldPwd = document.getElementById('oldPwd').value.trim();
+            const newPwd = document.getElementById('newPwd').value.trim();
+            const confirmPwd = document.getElementById('confirmPwd').value.trim();
+
+            if (!oldPwd || !newPwd || !confirmPwd) {
+                return showToast('请填写完整');
+            }
+            if (newPwd !== confirmPwd) {
+                return showToast('两次新密码不一致');
+            }
+
+            try {
+                await request('/user/updatePwd', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        userId: currentUser.userId,
+                        oldPwd: oldPwd,
+                        newPwd: newPwd
+                    })
+                });
+                showToast('密码修改成功！请重新登录');
+                setTimeout(() => {
+                    currentUser = null;
+                    localStorage.removeItem('currentUser');
+                    render();
+                }, 1500);
+            } catch (err) {
+                showToast('修改失败：原密码错误');
+            }
+        };
+
+        document.getElementById('deleteUserBtn').onclick = async () => {
+            if (!confirm('确定要注销账号吗？此操作不可恢复！')) return;
+            if (!confirm('最后确认：注销后所有数据清空！')) return;
+
+            try {
+                await request(`/user/delete/${currentUser.userId}`, { method: 'DELETE' });
+                showToast('账号已注销');
+                localStorage.clear();
+                currentUser = null;
+                render();
+            } catch (e) {
+                showToast('注销失败');
+            }
+        };
+    }
+
+    async function loadDishComment(dishId) {
+        const commentListDom = document.getElementById(`commentList-${dishId}`);
+        const contentDom = document.getElementById(`commentContent-${dishId}`);
+        if (!commentListDom || !contentDom) {
+            console.log("评价列表DOM不存在");
+            return;
+        }
+        try {
+            const list = await request(`/comment/list/${dishId}`);
+            if (!list || list.length === 0) {
+                contentDom.innerHTML = '<p>暂无评价，快来抢沙发吧~</p>';
+                return;
+            }
+            let html = '';
+            list.forEach(c => {
+                let star = '⭐'.repeat(c.score);
+                html += `
+                <div style="padding:8px 0;border-bottom:1px solid #eee">
+                    <p>评分：${star}</p>
+                    <p>${c.content || '无评价文字'}</p>
+                    <small>${c.createTime ? c.createTime.slice(0, 16) : ''}</small>
+                </div>
+            `;
+            });
+            contentDom.innerHTML = html;
+        } catch (e) {
+            console.error("加载评价失败", e);
+            contentDom.innerHTML = '<p>暂无评价</p>';
+        }
+    }
+
+    function openCommentModal(dishId) {
+        closeCommentModal();
+        currentCommentDishId = dishId;
+        document.getElementById('commentModal').style.display = 'block';
+    }
+
+    function closeCommentModal() {
+        document.getElementById('commentModal').style.display = 'none';
+        document.getElementById('commentScore').value = 5;
+        document.getElementById('commentContent').value = '';
+        currentCommentDishId = null;
+    }
+
+    async function submitComment() {
+        if (!currentCommentDishId) {
+            showToast('请先选择菜品');
+            return;
+        }
+        const score = parseInt(document.getElementById('commentScore').value);
+        const content = document.getElementById('commentContent').value.trim();
+        if (isNaN(score) || score < 1 || score > 5) {
+            showToast('请输入1-5分有效评分');
+            return;
+        }
+        if (!content) {
+            showToast('评价内容不能为空');
+            return;
+        }
+
+        try {
+            await request('/comment/add', {
+                method: 'POST',
+                body: JSON.stringify({
+                    dishId: currentCommentDishId,
+                    userId: currentUser.userId,
+                    score: score,
+                    content: content
+                })
+            });
+            showToast('评价提交成功');
+            closeCommentModal();
+            loadDishComment(currentCommentDishId);
+        } catch (e) {
+            showToast('评价提交失败，请重试');
+            console.error(e);
+            closeCommentModal();
+        }
+    }
+
+    function openPostModal(){
+        document.getElementById('postModal').style.display = 'block';
+    }
+    function closePostModal(){
+        document.getElementById('postModal').style.display = 'none';
+        document.getElementById('postTitle').value = '';
+        document.getElementById('postContent').value = '';
+    }
+    async function submitPost(){
+        const title = document.getElementById('postTitle').value.trim();
+        const content = document.getElementById('postContent').value.trim();
+        if(!title || !content){
+            showToast('标题和内容不能为空');
+            return;
+        }
+        await request('/post/add',{
+            method:'POST',
+            body:JSON.stringify({
+                userId:currentUser.userId,
+                title:title,
+                content:content
+            })
+        });
+        showToast('帖子发布成功');
+        closePostModal();
+        renderCommunity(document.getElementById('contentPanel'));
+    }
+    async function likePost(postId){
+        await request(`/post/like/${postId}`,{method:'POST'});
+        showToast('点赞成功');
+        renderCommunity(document.getElementById('contentPanel'));
+    }
+
+    async function loadAnnouncements(){
+        const announceList = await request('/announce/list');
+        if(!announceList || announceList.length === 0) return;
+        const latest = announceList[0];
+        const bar = document.getElementById('announceBar');
+        const textDom = document.getElementById('announceText');
+        textDom.innerText = `📢 公告：${latest.title} — ${latest.content}`;
+        bar.style.display = 'flex';
+    }
+    function closeAnnounceBar(){
+        document.getElementById('announceBar').style.display = 'none';
+    }
+
+    (function init() {
+        const stored = localStorage.getItem('currentUser');
+        if (stored) {
+            try {
+                currentUser = JSON.parse(stored);
+            } catch(e) {}
+        }
+        render();
+    })();
+</script>
+</body>
+</html>
